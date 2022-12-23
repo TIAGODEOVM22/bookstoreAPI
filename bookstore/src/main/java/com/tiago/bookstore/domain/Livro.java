@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +31,7 @@ public class Livro implements Serializable{
 	private String nome_autor;
 	private String texto;
 	
+	@JsonIgnore /*Não vai trazer este atributo*/
 	@ManyToOne
 	@JoinColumn(name="categoria_id")
 	private Categoria categoria;
