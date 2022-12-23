@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,16 +29,20 @@ public class Categoria implements Serializable{
 	private String nome;
 	private String descricao;
 	
+	
+	/*@Getter(value = AccessLevel.NONE)
+	@Setter(value = AccessLevel.NONE)*/
 	@OneToMany(mappedBy = "categoria")
 	private List<Livro> livro = new ArrayList<>();
 
+	
 	public Categoria(Integer id, String nome, String descricao) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.descricao = descricao;
 	}
-	
+
 	
 	
 }
