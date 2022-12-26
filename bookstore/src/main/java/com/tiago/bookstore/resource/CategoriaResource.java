@@ -2,7 +2,6 @@ package com.tiago.bookstore.resource;
 
 import java.util.List;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tiago.bookstore.assembler.CategoriaAssembler;
 import com.tiago.bookstore.dto.CategoriaDto;
-import com.tiago.bookstore.repository.CategoriaRepository;
 import com.tiago.bookstore.services.CategoriaService;
 
 @RestController
@@ -20,25 +18,29 @@ import com.tiago.bookstore.services.CategoriaService;
 public class CategoriaResource {
 
 	@Autowired
-	private CategoriaRepository categoriaRepository;
-	@Autowired
-	private ModelMapper modelMapper;
-	@Autowired
 	private CategoriaService categoriaService;
 	@Autowired
 	private CategoriaAssembler categoriaAssembler;
 
-	@GetMapping(value = "/{categoriaId}")
+	/*RETORNA POR ID MAS NÃO ESTA COM TRATRAMENTO DE EXCESSÃO PERSONALIZADO*/
+	/*A CONVERSÃO DE MODEL PARA DTO É FEITA DENTRO DESSE MÉTODO*/
+	/*@GetMapping(value = "/{categoriaId}")
 	public ResponseEntity<CategoriaDto> findByIdDTO(@PathVariable Integer categoriaId) {
 		return categoriaRepository.findById(categoriaId)
 				.map(categoria -> ResponseEntity.ok(categoriaAssembler.toCategoriaDto(categoria)))
 				.orElse(ResponseEntity.notFound().build());
+	}*/
+	
+	@GetMapping(value = "/{categoriaId}")
+	public ResponseEntity<CategoriaDto> findById(@PathVariable Integer categoriaId) {
+		 return ResponseEntity.ok().body(categoriaAssembler.toCategoriaDto(categoriaService.findById(categoriaId)));
 
 	}
 	
 	@GetMapping
-	public List<CategoriaDto> findAll(){
-		return categoriaAssembler.toListCategoriaDto(categoriaRepository.findAll());
+	public ResponseEntity <List<CategoriaDto>> findAll(){
+		return ResponseEntity.ok().body(categoriaAssembler.toListCategoriaDto(categoriaService.findAll()));
+		
 	}
 	
 
