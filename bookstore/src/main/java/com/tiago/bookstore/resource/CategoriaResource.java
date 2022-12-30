@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,13 +32,13 @@ public class CategoriaResource {
 
 	@GetMapping(value = "/{categoriaId}")
 	public ResponseEntity<CategoriaDto> findById(@PathVariable Integer categoriaId) {
-		return ResponseEntity.ok().body(categoriaAssembler.toCategoriaDto(categoriaService.findById(categoriaId)));
-
+		return ResponseEntity.ok().body(categoriaAssembler.toCategoriaDto
+				(categoriaService.findById(categoriaId)));
 	}
 
 	@GetMapping
-	public ResponseEntity<List<CategoriaDto>> findAll() {
-		return ResponseEntity.ok().body(categoriaAssembler.toListCategoriaDto(categoriaService.findAll()));
+	public ResponseEntity<CollectionModel<CategoriaDto>> findAll() {
+		return ResponseEntity.ok().body(categoriaService.findAll());
 
 	}
 
@@ -51,18 +52,28 @@ public class CategoriaResource {
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<CategoriaDto> update(@PathVariable Integer id, @RequestBody CategoriaDto objDTO) {
 		objDTO.setId(id);
-		return ResponseEntity.ok().body(categoriaAssembler.toCategoriaDto(categoriaService.update(id, objDTO)));
+		return ResponseEntity.ok().body(categoriaAssembler.
+				toCategoriaDto(categoriaService.update(id, objDTO)));
 	}
-
-	/*@DeleteMapping(value = "/{id}")
-	public ResponseEntity<CategoriaDto> delete(@PathVariable Integer id) {
-		categoriaService.deletar(id);
-		return ResponseEntity.noContent().build();
-	}*/
 
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<String> delete(@PathVariable Integer id) {
 		categoriaService.deletar(id);
 		return ResponseEntity.ok().body("Categoria Deletada!");
 	}
+	
+	/*@GetMapping RETORNA TODOS CATEGORIA JA EM DTO E COM LINKS, MAS NÃO ESTA USANDO PADRÃO HALL
+	 * IREMOS MUDAR O RETORNO DE LIST PARA COLLECTIONMODEL, O método toListCategoriaDto TAMBEM TERÁ
+	 * QUE SER ALTERADO SEU RETORNO.
+	public ResponseEntity<List<CategoriaDto>> findAll() {
+		return ResponseEntity.ok().body(categoriaAssembler.toListCategoriaDto(categoriaService.findAll()));
+
+	}*/
+	
+	/*@DeleteMapping(value = "/{id}")
+	public ResponseEntity<CategoriaDto> delete(@PathVariable Integer id) {
+		categoriaService.deletar(id);
+		return ResponseEntity.noContent().build();
+	}*/
+	
 }

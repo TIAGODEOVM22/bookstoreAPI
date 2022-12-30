@@ -8,6 +8,9 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.mediatype.hal.CollectionModelMixin;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
 
@@ -24,42 +27,54 @@ public class CategoriaAssembler {
 	@Autowired
 	private ModelMapper modelMapper;
 
-	/*LINK FIXO APENAS TESTE O CERTO É DINAMICO*/
-	/*public CategoriaDto toCategoriaDto(Categoria categoria) {
-		CategoriaDto objDto = modelMapper.map(categoria, CategoriaDto.class);
-		objDto.add(Link.of("http://localhost:8080/categorias/1"));
-		return objDto;
-	}*/
-	
-	/*RETORNA DE FORMA DINÂMICA MAS AINDA PODE SER MELHORADO UTILIZANDO APENAS O 
-	 * MAPEAMENTO DA CLASSE E DO MÉTODO*/
-	/*public CategoriaDto toCategoriaDto(Categoria categoria) {
-		CategoriaDto objDto = modelMapper.map(categoria, CategoriaDto.class);
-		objDto.add(WebMvcLinkBuilder.linkTo(CategoriaResource.class).slash(categoria.getId()).withSelfRel());
-		return objDto;
-	}**/
 	
 	public CategoriaDto toCategoriaDto(Categoria categoria) {
 		CategoriaDto objDto = modelMapper.map(categoria, CategoriaDto.class);
 		
-		objDto.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CategoriaResource.class)
+		/*Gera link para objDto de forma dinâmica através do metodo findById*/
+		objDto.add(WebMvcLinkBuilder
+				.linkTo(WebMvcLinkBuilder.methodOn(CategoriaResource.class)
 				.findById(categoria.getId())).withSelfRel());
 		
-		objDto.add(linkTo(methodOn(CategoriaResource.class)
-				.findAll()).withRel("categorias"));
-		
+		/*Gera link através do mapeamento da classeResource e seu mapeamento)*/
+		objDto.add(linkTo(methodOn(CategoriaResource.class).findAll()).withRel("categorias"));
+
 		return objDto;
 	}
 	
-	
-	/*TRANSFORMA EM DTO SEM RETORNAR LINK*/
-	/*public CategoriaDto toCategoriaDto(Categoria categoria) {
-		return modelMapper.map(categoria, CategoriaDto.class);
-	}*/
-
-
-	public List<CategoriaDto> toListCategoriaDto(List<Categoria> categorias) {
-		return categorias.stream().map(this::toCategoriaDto).collect(Collectors.toList());
+	/*Alterado de List p/ CollectionModel adicionando tudo dentro do Embedded*/
+	public CollectionModel<CategoriaDto> toListCategoriaDto(List<Categoria> categorias) {
+			var categoriaDto = CollectionModel.of(categorias.stream()
+					.map(categoria -> toCategoriaDto(categoria)).
+					collect(Collectors.toList()));
+			
+			/*gera Link para o próprio recurso dessa coleção*/
+			categoriaDto.add(linkTo(methodOn(CategoriaResource.class).findAll()).withSelfRel());
+			return categoriaDto;
 	}
+	
+	/* LINK FIXO APENAS TESTE O CERTO É DINAMICO */
+	/*
+	 * public CategoriaDto toCategoriaDto(Categoria categoria) { CategoriaDto objDto
+	 * = modelMapper.map(categoria, CategoriaDto.class);
+	 * objDto.add(Link.of("http://localhost:8080/categorias/1")); return objDto; }
+	 */
+
+	/*
+	 * RETORNA DE FORMA DINÂMICA MAS AINDA PODE SER MELHORADO UTILIZANDO APENAS O
+	 * MAPEAMENTO DA CLASSE E DO MÉTODO
+	 */
+	/*
+	 * public CategoriaDto toCategoriaDto(Categoria categoria) { CategoriaDto objDto
+	 * = modelMapper.map(categoria, CategoriaDto.class);
+	 * objDto.add(WebMvcLinkBuilder.linkTo(CategoriaResource.class).slash(categoria.
+	 * getId()).withSelfRel()); return objDto; }
+	 **/
+	
+	/* TRANSFORMA EM DTO SEM RETORNAR LINK */
+	/*
+	 * public CategoriaDto toCategoriaDto(Categoria categoria) { return
+	 * modelMapper.map(categoria, CategoriaDto.class); }
+	 */
 
 }
