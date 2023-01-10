@@ -9,8 +9,6 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.mediatype.hal.CollectionModelMixin;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +25,7 @@ public class CategoriaAssembler {
 	@Autowired
 	private ModelMapper modelMapper;
 
-	
+	/*TRANSFORMA UM OBJ PARA DTO*/
 	public CategoriaDto toCategoriaDto(Categoria categoria) {
 		CategoriaDto objDto = modelMapper.map(categoria, CategoriaDto.class);
 		
@@ -36,12 +34,13 @@ public class CategoriaAssembler {
 				.linkTo(WebMvcLinkBuilder.methodOn(CategoriaResource.class)
 				.findById(categoria.getId())).withSelfRel());
 		
-		/*Gera link através do mapeamento da classeResource e seu mapeamento)*/
+		/*gera Link para o próprio recurso dessa coleção*/
 		objDto.add(linkTo(methodOn(CategoriaResource.class).findAll()).withRel("categorias"));
 
 		return objDto;
 	}
 	
+	/*TRANSFORMA "COLEÇÃO" PARA DTO*/
 	/*Alterado de List p/ CollectionModel adicionando tudo dentro do Embedded*/
 	public CollectionModel<CategoriaDto> toListCategoriaDto(List<Categoria> categorias) {
 			var categoriaDto = CollectionModel.of(categorias.stream()
@@ -50,6 +49,7 @@ public class CategoriaAssembler {
 			
 			/*gera Link para o próprio recurso dessa coleção*/
 			categoriaDto.add(linkTo(methodOn(CategoriaResource.class).findAll()).withSelfRel());
+			
 			return categoriaDto;
 	}
 	

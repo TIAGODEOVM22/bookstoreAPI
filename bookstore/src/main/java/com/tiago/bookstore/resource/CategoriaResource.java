@@ -1,7 +1,6 @@
 package com.tiago.bookstore.resource;
 
 import java.net.URI;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -23,7 +22,7 @@ import com.tiago.bookstore.services.CategoriaService;
 
 @RestController
 @RequestMapping(value = "/categorias")
-public class CategoriaResource {
+public class CategoriaResource<TCategoriaDto> {
 
 	@Autowired
 	private CategoriaService categoriaService;
@@ -38,7 +37,7 @@ public class CategoriaResource {
 
 	@GetMapping
 	public ResponseEntity<CollectionModel<CategoriaDto>> findAll() {
-		return ResponseEntity.ok().body(categoriaService.findAll());
+		return ResponseEntity.ok().body(categoriaService.findAll()) ;
 
 	}
 
@@ -48,12 +47,13 @@ public class CategoriaResource {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
-
+	
+	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<CategoriaDto> update(@PathVariable Integer id, @RequestBody CategoriaDto objDTO) {
-		objDTO.setId(id);
+	public ResponseEntity<CategoriaDto> update(@PathVariable Integer id, @RequestBody CategoriaDto objDto) {
+		objDto.setId(id);
 		return ResponseEntity.ok().body(categoriaAssembler.
-				toCategoriaDto(categoriaService.update(id, objDTO)));
+				toCategoriaDto(categoriaService.update(id, objDto)));
 	}
 
 	@DeleteMapping(value = "/{id}")
