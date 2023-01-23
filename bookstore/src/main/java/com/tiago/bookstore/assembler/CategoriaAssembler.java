@@ -24,6 +24,14 @@ public class CategoriaAssembler {
 
 	@Autowired
 	private ModelMapper modelMapper;
+	
+	/*GERA LINK SEM TRANS P/ DTO*/
+	public Categoria toCategoriaHateos (Categoria categoria) {
+		categoria.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CategoriaResource.class).
+				findById(categoria.getId())).withSelfRel());
+		
+		return categoria;
+	}
 
 	/*TRANSFORMA UM OBJ PARA DTO*/
 	public CategoriaDto toCategoriaDto(Categoria categoria) {
@@ -52,6 +60,8 @@ public class CategoriaAssembler {
 			
 			return categoriaDto;
 	}
+	
+	
 	
 	/* LINK FIXO APENAS TESTE O CERTO É DINAMICO */
 	/*

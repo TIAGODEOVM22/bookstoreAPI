@@ -29,7 +29,8 @@ public class LivroAssembler {
 
 	@Autowired
 	private ModelMapper modelMapper;
-
+	
+	
 	/* TRANSFORMA UM OBJ PARA DTO */
 	public LivroDto toLivroDto(Livro livro) {
 		LivroDto livroDto = modelMapper.map(livro, LivroDto.class);
@@ -72,12 +73,11 @@ public class LivroAssembler {
 
 	/* Transforma para DTO e gera link */
 	/*
-	 * public LivroDto toLivroDto(Livro livro) { LivroDto objDto =
-	 * modelMapper.map(livro, LivroDto.class);
-	 * 
+	 * public LivroDto toLivroDto(Livro livro) { 
+	 * LivroDto objDto = modelMapper.map(livro, LivroDto.class);
 	 * objDto.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(LivroResource.
 	 * class) .findById(livro.getId())).withSelfRel());
-	 * 
+
 	 * objDto.add(linkTo(methodOn(LivroResource.class)).withSelfRel()); return
 	 * objDto; }
 	 */

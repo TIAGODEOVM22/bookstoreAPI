@@ -1,9 +1,12 @@
 package com.tiago.bookstore.resource.exception;
 
 import javax.servlet.ServletRequest;
+import javax.validation.ConstraintViolationException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -28,6 +31,16 @@ public class ResourceExceptionHandler {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 		/*Este manipulador StandarError retorna um HttpStatus.BAD_REQUEST
 		 * Sua classe de parametro é o DataIntegrityVaiolationException e um ServletRequest*/
+	}
+	
+	/*TRATA ERRO SE OS CAMPOS NÃO FOREM PREENCHIDOS CORRETAMENTE*/
+	@ExceptionHandler(ConstraintViolationException.class)
+	public ResponseEntity<StandardError> validationErros(ConstraintViolationException e, ServletRequest request){
+		ValidationError error = new ValidationError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(), 
+				"Erro na validação dos campos");
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+		
 	}
 
 

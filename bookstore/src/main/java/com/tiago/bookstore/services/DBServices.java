@@ -20,9 +20,9 @@ public class DBServices {
 	private CategoriaRepository categoriaRepository;
 	
 	public void instanciaBD() {
-		Categoria cat1 = new Categoria(null, "Informática Top", "Livro de TI");
-		Categoria cat2 = new Categoria(null, "Informática Avançada", "Livro de TI");
-		Categoria cat3 = new Categoria(null, "Programação", "Livro de TI");
+		Categoria cat1 = new Categoria(null, "Basica", "Livros para tecnicos jr");
+		Categoria cat2 = new Categoria(null, "Intermediaria", "Livros para tecnicos pleno");
+		Categoria cat3 = new Categoria(null, "Avançada", "Livros para tecnicos senior");
 
 		Livro l1 = new Livro(null, "Clean Code", "Robert Martin", "Loren Ipsun", cat1);
 		Livro l2 = new Livro(null, "Lógica de Programação", "Bill Gates", "Loren Ipsun", cat3);

@@ -2,6 +2,8 @@ package com.tiago.bookstore.resource;
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +36,12 @@ public class CategoriaResource<TCategoriaDto> {
 		return ResponseEntity.ok().body(categoriaAssembler.toCategoriaDto
 				(categoriaService.findById(categoriaId)));
 	}
+	
+	/*@GetMapping(value = "/{categoriaId}")
+	public ResponseEntity<Categoria> findById(@PathVariable Integer categoriaId) {
+		return ResponseEntity.ok().body(categoriaAssembler.
+				toCategoriaHateos(categoriaService.findById(categoriaId)));
+	}*/
 
 	@GetMapping
 	public ResponseEntity<CollectionModel<CategoriaDto>> findAll() {
@@ -42,15 +50,17 @@ public class CategoriaResource<TCategoriaDto> {
 	}
 
 	@PostMapping
-	public ResponseEntity<Categoria> create(@RequestBody Categoria obj) {
+	public ResponseEntity<Categoria> create(@Valid @RequestBody Categoria obj) {
 		obj = categoriaService.create(obj);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}").buildAndExpand(obj.getId()).toUri();
+		
 		return ResponseEntity.created(uri).build();
 	}
 	
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<CategoriaDto> update(@PathVariable Integer id, @RequestBody CategoriaDto objDto) {
+	public ResponseEntity<CategoriaDto> update(@Valid @PathVariable Integer id, @RequestBody CategoriaDto objDto) {
 		objDto.setId(id);
 		return ResponseEntity.ok().body(categoriaAssembler.
 				toCategoriaDto(categoriaService.update(id, objDto)));
@@ -59,6 +69,7 @@ public class CategoriaResource<TCategoriaDto> {
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<String> delete(@PathVariable Integer id) {
 		categoriaService.deletar(id);
+		
 		return ResponseEntity.ok().body("Categoria Deletada!");
 	}
 	

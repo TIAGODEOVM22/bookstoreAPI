@@ -20,3 +20,4 @@ public interface LivroRepository extends JpaRepository<Livro, Integer> {
 	CollectionModel<LivroDto>findAllByCategoria(@Param(value = "id_cat") Integer id_cat);
 	/*lista todos os livros de uma determinada categoria ordenando pelo titulo */
 }
+
